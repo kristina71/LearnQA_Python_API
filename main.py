@@ -1,6 +1,9 @@
-import requests
+import json
 
-print('Hello from Kris')
+json_text = '{"messages":[{"message":"This is the first message","timestamp":"2021-06-04 16:40:53"},{"message":"And this is a second message","timestamp":"2021-06-04 16:41:01"}]}'
 
-response = requests.get("https://playground.learnqa.ru/api/get_text")
-print(response.text)
+obj = json.loads(json_text)
+print(obj["messages"][1]["message"])
+
+
+
