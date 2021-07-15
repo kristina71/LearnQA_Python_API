@@ -1,7 +1,10 @@
 import pytest
 import requests
 
-class TestHeader:
+from lib.base_case import BaseCase
+
+
+class TestHeader(BaseCase):
     def test_header(self):
         url = "https://playground.learnqa.ru/api/homework_header"
         response = requests.get(url)

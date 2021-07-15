@@ -2,8 +2,10 @@ import pytest
 import requests
 import json
 
+from lib.base_case import BaseCase
 
-class TestUserAgent:
+
+class TestUserAgent(BaseCase):
     data = [
         (
             {

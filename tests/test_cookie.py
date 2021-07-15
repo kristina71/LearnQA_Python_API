@@ -2,7 +2,10 @@ import pytest
 import requests
 import json
 
-class TestCookie:
+from lib.base_case import BaseCase
+
+
+class TestCookie(BaseCase):
     def test_cookie(self):
         url = "https://playground.learnqa.ru/api/homework_cookie"
         response = requests.get(url)
