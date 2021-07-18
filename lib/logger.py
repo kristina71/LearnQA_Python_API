@@ -4,7 +4,7 @@ from requests.models import Response
 
 
 class Logger:
-    file_name = f"\\Users\\kristina\\Desktop\\LearnQA_Python_API\\tests\\logs\\log_" + str(
+    file_name = f"logs/log_" + str(
         datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")) + ".log"
 
     @classmethod

@@ -8,8 +8,12 @@ from lib.base_case import BaseCase
 from lib.my_requests import MyRequests
 
 
+@allure.feature("User profile")
+@allure.story("User profile")
 @allure.epic("Tests for user registrations")
 class TestUserRegister(BaseCase):
+    @allure.severity(allure.severity_level.CRITICAL)
+    @allure.title('Test create user successfully')
     @allure.description("Test create user successfully")
     def test_create_user_successfully(self):
         data = self.prepare_register_data()
@@ -18,6 +22,8 @@ class TestUserRegister(BaseCase):
         Assertions.assert_code_status(response, 200)
         Assertions.json_has_key(response, "id")
 
+    @allure.severity(allure.severity_level.CRITICAL)
+    @allure.title('Test create user with existing email')
     @allure.description("Test create user with existing email")
     def test_create_user_with_existing_email(self):
         fake = Faker()
@@ -36,6 +42,8 @@ class TestUserRegister(BaseCase):
         assert response.content.decode(
             "utf-8") == f"Users with email '{email}' already exists", f"actual content {response.status_code}"
 
+    @allure.severity(allure.severity_level.NORMAL)
+    @allure.title('Test create user with incorrect email')
     @allure.description("Test create user with incorrect email")
     def test_create_user_with_incorrect_email(self):
         fake = Faker()
@@ -51,8 +59,11 @@ class TestUserRegister(BaseCase):
 
         response = MyRequests.post("/user/", data=data)
         Assertions.assert_code_status(response, 400)
+
         assert response.content.decode("utf-8") == f"Invalid email format"
 
+    @allure.severity(allure.severity_level.MINOR)
+    @allure.title('Test create user with short username')
     @allure.description("Test create user with short username")
     def test_create_user_with_short_username(self):
         fake = Faker()
@@ -69,6 +80,8 @@ class TestUserRegister(BaseCase):
         Assertions.assert_code_status(response, 400)
         assert response.content.decode("utf-8") == f"The value of 'username' field is too short"
 
+    @allure.severity(allure.severity_level.MINOR)
+    @allure.title('Test create user with long username')
     @allure.description("Test create user with long username")
     def test_create_user_with_long_username(self):
         fake = Faker()
@@ -94,6 +107,8 @@ class TestUserRegister(BaseCase):
         'email'
     ]
 
+    @allure.severity(allure.severity_level.CRITICAL)
+    @allure.title('Test create user with not one parameter')
     @allure.description("Test create user with not one parameter")
     @pytest.mark.parametrize('exclude_params', exclude_params)
     def test_create_user_with_not_one_parameter(self, exclude_params):

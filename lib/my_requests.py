@@ -1,13 +1,10 @@
-from tests.environment import ENV_OBJECT, environment
-from lib.logger import Logger
 import requests
-from requests.models import Response
 from lib.logger import Logger
 import allure
 from tests.environment import ENV_OBJECT
 
 
-class MyRequests():
+class MyRequests:
     @staticmethod
     def post(url: str, data: dict = None, headers: dict = None, cookies: dict = None):
         with allure.step(f"POST request to {url}"):

@@ -5,8 +5,12 @@ from lib.assertions import Assertions
 import allure
 
 
+@allure.story("User profile")
+@allure.feature("User profile")
 @allure.epic("Tests for edit user")
 class TestUserEdit(BaseCase):
+    @allure.severity(allure.severity_level.CRITICAL)
+    @allure.title('Test for success create user')
     @allure.description("Test for success create user")
     def test_edit_just_created_user(self):
         register_data = self.prepare_register_data()
@@ -15,14 +19,9 @@ class TestUserEdit(BaseCase):
         Assertions.assert_code_status(response, 200)
         Assertions.json_has_key(response, "id")
 
-        email = register_data['email']
-        password = register_data['password']
         user_id = self.get_answer(response, "id")
 
-        login_data = {
-            'email': email,
-            'password': password
-        }
+        login_data = self.prepare_login_data(register_data['email'], register_data['password'])
 
         response2 = MyRequests.post("/user/login", data=login_data)
 
@@ -51,6 +50,8 @@ class TestUserEdit(BaseCase):
             "Wrong name"
         )
 
+    @allure.severity(allure.severity_level.NORMAL)
+    @allure.title('Test for edit data user not have auth')
     @allure.description("Test for edit data user not have auth")
     def test_try_edit_user_not_auth(self):
         fake = Faker()
@@ -63,6 +64,8 @@ class TestUserEdit(BaseCase):
         Assertions.assert_code_status(response, 400)
         assert response.content.decode("utf-8") == f"Auth token not supplied"
 
+    @allure.severity(allure.severity_level.NORMAL)
+    @allure.title('Test for edit data')
     @allure.description("Test for edit data first user, have auth second user")
     def test_try_edit_another_user(self):
         register_data = self.prepare_register_data()
@@ -71,10 +74,7 @@ class TestUserEdit(BaseCase):
         first_name = register_data['firstName']
         user_id = self.get_answer(response, "id")
 
-        login_data = {
-            'email': register_data['email'],
-            'password': register_data['password']
-        }
+        login_data = self.prepare_login_data(register_data['email'], register_data['password'])
 
         response1 = MyRequests.post("/user/login", data=login_data)
         auth_sid = self.get_cookie(response1, "auth_sid")
@@ -83,10 +83,7 @@ class TestUserEdit(BaseCase):
         register_data1 = self.prepare_register_data()
         MyRequests.post("/user/", data=register_data1)
 
-        login_data1 = {
-            'email': register_data1['email'],
-            'password': register_data1['password']
-        }
+        login_data1 = self.prepare_login_data(register_data1['email'], register_data1['password'])
 
         response2 = MyRequests.post("/user/login", data=login_data1)
         auth_sid2 = self.get_cookie(response2, "auth_sid")
@@ -114,6 +111,8 @@ class TestUserEdit(BaseCase):
             "Wrong name"
         )
 
+    @allure.severity(allure.severity_level.NORMAL)
+    @allure.title('Test for change email without symbol @')
     @allure.description("Test for change email without symbol @")
     def test_change_email_with_incorrect_data(self):
         register_data = self.prepare_register_data()
@@ -123,10 +122,7 @@ class TestUserEdit(BaseCase):
         password = register_data['password']
         user_id = self.get_answer(response, "id")
 
-        login_data = {
-            'email': email,
-            'password': password
-        }
+        login_data = self.prepare_login_data(email, password)
 
         response1 = MyRequests.post("/user/login", data=login_data)
         auth_sid = self.get_cookie(response1, "auth_sid")
@@ -151,6 +147,8 @@ class TestUserEdit(BaseCase):
             "Wrong email"
         )
 
+    @allure.severity(allure.severity_level.MINOR)
+    @allure.title('Test for changing firstName with min len')
     @allure.description("Test for changing firstName with min len")
     def test_change_firstname_min_len(self):
         register_data = self.prepare_register_data()
@@ -159,10 +157,7 @@ class TestUserEdit(BaseCase):
         first_name = register_data['firstName']
         user_id = self.get_answer(response, "id")
 
-        login_data = {
-            'email': register_data['email'],
-            'password': register_data['password']
-        }
+        login_data = self.prepare_login_data(register_data['email'],  register_data['password'])
 
         response1 = MyRequests.post("/user/login", data=login_data)
         auth_sid = self.get_cookie(response1, "auth_sid")

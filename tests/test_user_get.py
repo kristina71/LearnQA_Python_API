@@ -4,8 +4,12 @@ from lib.my_requests import MyRequests
 import allure
 
 
+@allure.story("User profile")
+@allure.feature("User profile")
 @allure.epic("Test get user register data")
 class TestUserGet(BaseCase):
+    @allure.severity(allure.severity_level.NORMAL)
+    @allure.title('Test get user details not auth')
     @allure.description("Test get user details not auth")
     def test_get_user_details_not_auth(self):
         response = MyRequests.get("/user/2")
@@ -15,12 +19,11 @@ class TestUserGet(BaseCase):
         Assertions.json_has_no_key(response, "firstName")
         Assertions.json_has_no_key(response, "lastName")
 
+    @allure.severity(allure.severity_level.NORMAL)
+    @allure.title('Test get user details auth as same user')
     @allure.description("Test get user details auth as same user")
     def test_get_user_details_auth_as_same_user(self):
-        data = {
-            'email': 'vinkotov@example.com',
-            'password': '1234'
-        }
+        data = self.prepare_default_login_data()
 
         response1 = MyRequests.post("/user/login", data=data)
 
@@ -37,12 +40,11 @@ class TestUserGet(BaseCase):
 
         Assertions.json_has_keys(response2, expected_fields)
 
+    @allure.severity(allure.severity_level.NORMAL)
+    @allure.title('Test get data from another user')
     @allure.description("Test get data from another user")
     def test_get_data_another_user(self):
-        data = {
-            'email': 'vinkotov@example.com',
-            'password': '1234'
-        }
+        data = self.prepare_default_login_data()
 
         response1 = MyRequests.post("/user/login", data=data)
 

@@ -4,14 +4,15 @@ from lib.assertions import Assertions
 import allure
 
 
+@allure.story("User profile")
+@allure.feature("User profile")
 @allure.epic("Tests user delete")
 class TestUserDelete(BaseCase):
-    @allure.description("Test deleting user with id 2(this id users cant delete")
+    @allure.severity(allure.severity_level.NORMAL)
+    @allure.title('Test deleting user with id 2')
+    @allure.description("Test deleting user with id 2(this id users can't be deleted")
     def test_delete_user(self):
-        login_data = {
-            'email': 'vinkotov@example.com',
-            'password': '1234'
-        }
+        login_data = self.prepare_default_login_data()
 
         user_id = 2
         response = MyRequests.post("/user/login", data=login_data)
@@ -31,15 +32,14 @@ class TestUserDelete(BaseCase):
 
         Assertions.assert_json_value_by_name(response3, "username", "Vitaliy", "User with id=2 cannot be deleted")
 
+    @allure.severity(allure.severity_level.CRITICAL)
+    @allure.title('Test deleting user')
     @allure.description("Test deleting user")
     def test_positive_delete_user(self):
         register_data = self.prepare_register_data()
         MyRequests.post("/user/", data=register_data)
 
-        login_data = {
-            'email': register_data['email'],
-            'password': register_data['password']
-        }
+        login_data = self.prepare_login_data(register_data['email'], register_data['password'])
 
         response = MyRequests.post("/user/login", data=login_data)
         auth_sid = self.get_cookie(response, "auth_sid")
@@ -55,12 +55,11 @@ class TestUserDelete(BaseCase):
 
         assert response2.content.decode("utf-8") == f"User not found"
 
+    @allure.severity(allure.severity_level.CRITICAL)
+    @allure.title('Test for delete second user with having auth data in first user')
     @allure.description("Test for delete second user with having auth data in first user")
     def test_delete_another_user(self):
-        login_data = {
-            'email': 'vinkotov@example.com',
-            'password': '1234'
-        }
+        login_data = self.prepare_default_login_data()
 
         response = MyRequests.post("/user/login", data=login_data)
         auth_sid = self.get_cookie(response, "auth_sid")
