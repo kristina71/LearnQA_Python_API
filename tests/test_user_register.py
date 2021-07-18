@@ -12,15 +12,7 @@ from lib.my_requests import MyRequests
 class TestUserRegister(BaseCase):
     @allure.description("Test create user successfully")
     def test_create_user_successfully(self):
-        fake = Faker()
-
-        data = {
-            'username': fake.user_name(),
-            'firstName': fake.first_name(),
-            'lastName': fake.last_name(),
-            'password': fake.password(),
-            'email': fake.ascii_company_email()
-        }
+        data = self.prepare_register_data()
 
         response = MyRequests.post("/user/", data=data)
         Assertions.assert_code_status(response, 200)
@@ -105,15 +97,7 @@ class TestUserRegister(BaseCase):
     @allure.description("Test create user with not one parameter")
     @pytest.mark.parametrize('exclude_params', exclude_params)
     def test_create_user_with_not_one_parameter(self, exclude_params):
-        fake = Faker()
-
-        data = {
-            'username': fake.user_name(),
-            'firstName': fake.first_name(),
-            'lastName': fake.last_name(),
-            'password': fake.password(),
-            'email': fake.ascii_company_email()
-        }
+        data = self.prepare_register_data()
 
         data.pop(exclude_params)
         response = MyRequests.post("/user/", data=data)
