@@ -1,5 +1,6 @@
 import json
 
+from faker import Faker
 from requests import Response
 
 
@@ -31,3 +32,14 @@ class BaseCase:
         assert name in response_as_dist, f"Response JSON doesn't have key '{name}'"
 
         return response_as_dist[name]
+
+    def prepare_register_data(self):
+        fake = Faker()
+        data = {
+            'username': fake.user_name(),
+            'firstName': fake.first_name(),
+            'lastName': fake.last_name(),
+            'password': fake.password(),
+            'email': fake.ascii_company_email()
+        }
+        return data
